@@ -1,16 +1,16 @@
-name: 'Deploy PR build'
+name: 'Deploy PR to TEST 🚀'
+
 on:
-  issue_comment:
-    types: [created]
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
+  # TODO: Add BUILD and TEST steps
   deploy:
     # This job only runs for pull request comments
     name: Build and deploy to test
-    if: contains(github.event.comment.body, 'deploy to test')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -22,4 +22,4 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git fetch
-          git push --force origin $BRANCH_NAME:test --force-with-lease
+          git push --force origin $BRANCH_NAME:test
