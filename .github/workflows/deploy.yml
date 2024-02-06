@@ -3,6 +3,9 @@ on:
   issue_comment:
     types: [created]
 
+permissions:
+  contents: write
+
 jobs:
   deploy:
     # This job only runs for pull request comments
@@ -19,4 +22,6 @@ jobs:
           BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
         # Only run on main branch push (e.g. after pull request merge).
         run: |
+          git config --global user.name 'Your Name'
+          git config --global user.email 'your-username@users.noreply.github.com'
           git push origin $BRANCH_NAME:test --force-with-lease
