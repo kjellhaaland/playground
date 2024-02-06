@@ -10,7 +10,11 @@ jobs:
     if: contains(github.event.comment.body, 'deploy to test')
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to test
+      - uses: actions/checkout@v3
+
+      - name: Push to test
+        # Only run on main branch push (e.g. after pull request merge).
         run: |
-          echo "Deploying to test for PR ${{ github.event.pull_request.number }}"
-          # Add your deployment steps here
+          git config --global user.name "github-actions"
+          git config --global user.email "username@users.noreply.github.com"
+          git push origin test --force-with-lease
