@@ -4,18 +4,10 @@ jobs:
   pr_commented:
     # This job only runs for pull request comments
     name: Build and deploy to test
-    if: ${{ github.event.issue.pull_request }}
+    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, "deploy-to-test")  }} &&
     runs-on: ubuntu-latest
     steps:
-      - name: Check if comment contains "deploy-to-test"
-        run: |
-          if [[ "${{ github.event.comment.body }}" != *"deploy-to-test"* ]]; then
-            echo "No action needed for PR ${{ github.event.pull_request.number }}"
-            exit 0  # Exiting with 0 indicates success
-          fi
-
       - name: Deploy to test
-        if: success()  # This step will only run if the previous step is successful
         run: |
           echo "Deploying to test for PR ${{ github.event.pull_request.number }}"
           # Add your deployment steps here
