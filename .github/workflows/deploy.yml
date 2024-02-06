@@ -1,13 +1,25 @@
-on: issue_comment
+name: 'Deploy PR to TEST 🚀'
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
-  pr_commented:
+  # TODO: Add BUILD and TEST steps
+  deploy:
     # This job only runs for pull request comments
-    name: PR comment
-    if: ${{ github.event.issue.pull_request && github.event.comment.body == *"deploy-to-test"* }}
+    name: Build and deploy to test
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo A comment on PR $NUMBER
+      - uses: actions/checkout@v3
+      - name: Push to test
         env:
-          NUMBER: ${{ github.event.issue.number }}
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+        # Only run on main branch push (e.g. after pull request merge).
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git fetch
+          git push --force origin $BRANCH_NAME:test
